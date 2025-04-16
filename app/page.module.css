@@ -12,6 +12,10 @@
   font-size: clamp(1.5cm, 3cm, 5cm);
 }
 
+.form {
+  grid-row: 4;
+}
+
 .signupbutton {
   grid-row: 4;
   padding: 15px 30px;
