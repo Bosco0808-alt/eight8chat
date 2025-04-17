@@ -1,4 +1,3 @@
-import Link from "next/link";
 import styles from "./page.module.css";
 import { signIn } from "@/lib/auth";
 import { auth } from "@/lib/auth";
@@ -24,7 +23,7 @@ export default async function Home() {
           Sign Up
         </button>*/}
           <button
-            className={`btn btn-secondary btn-lg grid-item ${styles.signinbutton} m-4`}
+            className={`btn btn-primary btn-lg grid-item ${styles.signinbutton} m-4`}
             type="submit"
           >
             Sign In With Email
