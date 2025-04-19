@@ -11,14 +11,22 @@ const Navbar = async () => {
       <ul className="navbar-nav">
         {session ? (
           <li className="nav-item active">
-            <Link className="nav-link btn btn-danger" href="/api/auth/signout">
+            <Link className="nav-link" href="/api/auth/signout">
               Logout
             </Link>
           </li>
         ) : (
           <li className="nav-item active">
             <Link className="nav-link" href="/api/auth/signin">
-              Log In
+              Sign In
+            </Link>
+          </li>
+        )}
+        {session && (
+          <li className="nav-item active">
+            <Link className="nav-link" href="/dashboard">
+              👤{" "}
+              {session?.user?.name ? session?.user?.name : session?.user?.email}
             </Link>
           </li>
         )}
