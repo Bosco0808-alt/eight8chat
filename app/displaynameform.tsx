@@ -2,7 +2,8 @@
 
 import { setName } from "@/actions";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 type Type = (arg: boolean) => any;
 
@@ -21,7 +22,11 @@ const DisplayNameForm = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!displayName) {
-      alert("Please enter display name!");
+      Swal.fire({
+        text: "Please enter display name!",
+        timer: 3000,
+        icon: "error",
+      });
       return;
     }
     setShowLoadingSpinner(true);
@@ -29,26 +34,34 @@ const DisplayNameForm = ({
       const unParsedResult = await setName(displayName, userid);
       const { result } = JSON.parse(unParsedResult);
       if (result === "ERR") {
-        alert("There was an error. Please try again Later.");
+        Swal.fire({
+          text: "There was an error. Please try again Later.",
+          timer: 3000,
+          icon: "error",
+        });
         return;
       }
       if (result === "ERR_NO_DISPLAYNAME") {
-        alert("Enter display name please!");
+        Swal.fire({
+          text: "Enter display name please!",
+          timer: 3000,
+          icon: "error",
+        });
         return;
       } // prob won't happen as it is checked before
       if (result === "SUCCESS") {
         setShowLoadingSpinner(false);
-        alert("Successfully set display name!"); // TODO: implement own alert
+        Swal.fire({
+          text: "Successfully set display name!",
+          timer: 3000,
+          icon: "success",
+        });
         !welcome && setIsSettingDisplayName(false);
-        if (welcome) {
-          router.push("/chat");
-        } else {
-          router.refresh();
-        }
+        welcome ? router.push("/chat") : router.refresh();
       }
     } catch (err) {
       console.log(err);
-      alert("There was an error. Try again Later please.");
+      Swal.fire("There was an error. Try again Later please.");
     }
   };
   return (
