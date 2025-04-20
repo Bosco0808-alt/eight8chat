@@ -50,12 +50,12 @@ const DisplayNameForm = ({
         return;
       } // prob won't happen as it is checked before
       if (result === "SUCCESS") {
-        setShowLoadingSpinner(false);
         Swal.fire({
           text: "Successfully set display name!",
           timer: 3000,
           icon: "success",
         });
+        setShowLoadingSpinner(false);
         !welcome && setIsSettingDisplayName(false);
         welcome ? router.push("/chat") : router.refresh();
       }
