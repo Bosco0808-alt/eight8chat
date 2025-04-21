@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import MainContent from "./maincontent";
 
 const Chat = async () => {
   const session = await auth();
@@ -9,7 +10,7 @@ const Chat = async () => {
   if (!session.user?.name) {
     redirect("/welcome");
   }
-  return <>{session.user?.name}</>;
+  return <MainContent user={session.user} />;
 };
 
 export default Chat;

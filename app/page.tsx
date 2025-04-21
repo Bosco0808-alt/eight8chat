@@ -1,5 +1,4 @@
-import styles from "./page.module.css";
-import { signIn } from "@/lib/auth";
+import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
@@ -10,25 +9,16 @@ export default async function Home() {
   }
   if (!session) {
     return (
-      <div className={styles.container}>
-        <h1 className={styles.title}>Eight8Chat</h1>
-        <form
-          className={styles.form}
-          action={async () => {
-            "use server";
-            await signIn(/*"resend", { redirectTo: "/chat" }*/);
-          }}
-        >
-          {/*<button className={`btn btn-primary btn-lg ${styles.signupbutton} m-4`}>
-          Sign Up
-        </button>*/}
-          <button
-            className={`btn btn-primary btn-lg grid-item ${styles.signinbutton} m-4`}
-            type="submit"
-          >
-            Sign In With Email
-          </button>
-        </form>
+      <div className="container vh-100">
+        <div className="row justify-content-center align-items-center h-100">
+          <div className="col-12 text-center">
+            <h1 className="display-4 mb-4">Eight8Chat</h1>
+
+            <Link className="btn btn-primary btn-lg" href={"/api/auth/signin"}>
+              Sign In With Email
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }

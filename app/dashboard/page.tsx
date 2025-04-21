@@ -10,6 +10,8 @@ const Dashboard = async () => {
   return (
     <>
       <h1 className="m-2">👤 {session?.user?.name ?? "No Name"}</h1>
+      <span className="m-2">ID: {session?.user?.id}</span>
+      <br />
       <ChangeDisplayName userid={Number(session?.user?.id) || 0} />
     </>
   );
