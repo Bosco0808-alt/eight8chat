@@ -8,6 +8,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Required Auth.JS tables:
 model accounts {
   id                Int     @id @default(autoincrement())
   userId            Int
@@ -31,11 +32,17 @@ model sessions {
 }
 
 model users {
-  id            Int       @id @default(autoincrement())
-  name          String?   @db.VarChar(255)
-  email         String?   @db.VarChar(255)
-  emailVerified DateTime? @db.Timestamptz(6)
-  image         String?
+  id               Int              @id @default(autoincrement())
+  name             String?          @db.VarChar(255)
+  email            String?          @db.VarChar(255)
+  emailVerified    DateTime?        @db.Timestamptz(6)
+  image            String?
+  // 👆 Required columns of AuthJS
+  // 👇 App specific columns
+  friends          users[]          @relation("UserFriends")
+  friendOf         users[]          @relation("UserFriends")
+  sentRequests     FriendRequests[] @relation("SentRequests")
+  receivedRequests FriendRequests[] @relation("ReceivedRequests")
 }
 
 model verification_token {
@@ -44,4 +51,16 @@ model verification_token {
   token      String
 
   @@id([identifier, token])
+}
+
+// App's tables:
+
+model FriendRequests {
+  id         String   @id @default(uuid())
+  senderId   Int
+  receiverId Int
+  status     String   @default("PENDING") // Could be "PENDING", "ACCEPTED", "REJECTED"
+  createdAt  DateTime @default(now())
+  sender     users    @relation("SentRequests", fields: [senderId], references: [id])
+  receiver   users    @relation("ReceivedRequests", fields: [receiverId], references: [id])
 }
