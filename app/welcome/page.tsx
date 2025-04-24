@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import DisplayNameForm from "../displaynameform";
+import DisplayNameForm from "./displaynameform";
 
 const Welcome = async () => {
   const session = await auth();
@@ -13,9 +13,7 @@ const Welcome = async () => {
   return (
     <>
       <h1 className="m-2">Welcome to eight8chat!</h1>
-      {/* im too lazy */
-      /* @ts-ignore */}
-      <DisplayNameForm userid={Number(session.user?.id)} welcome={true} />
+      <DisplayNameForm userid={Number(session.user?.id)} />
     </>
   );
 };

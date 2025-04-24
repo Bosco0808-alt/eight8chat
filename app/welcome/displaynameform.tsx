@@ -7,15 +7,7 @@ import Swal from "sweetalert2";
 
 type Type = (arg: boolean) => any;
 
-const DisplayNameForm = ({
-  userid,
-  welcome,
-  setIsSettingDisplayName,
-}: {
-  userid: number;
-  welcome: boolean;
-  setIsSettingDisplayName: Type;
-}) => {
+const DisplayNameForm = ({ userid }: { userid: number }) => {
   const router = useRouter();
   const [displayName, setDisplayName] = useState("");
   const [showLoadingSpinner, setShowLoadingSpinner] = useState(false);
@@ -56,8 +48,7 @@ const DisplayNameForm = ({
           icon: "success",
         });
         setShowLoadingSpinner(false);
-        !welcome && setIsSettingDisplayName(false);
-        welcome ? router.push("/chat") : router.refresh();
+        router.push("/chat");
       }
     } catch (err) {
       console.log(err);
@@ -75,16 +66,8 @@ const DisplayNameForm = ({
         required
       />
       <button type="submit" className="btn btn-primary m-2">
-        {welcome ? "Start chatting!" : "Confirm"}
+        Start chatting
       </button>
-      {!welcome && (
-        <button
-          className="btn btn-danger"
-          onClick={() => setIsSettingDisplayName(false)}
-        >
-          Cancel
-        </button>
-      )}
       {showLoadingSpinner && (
         <>
           <br />
