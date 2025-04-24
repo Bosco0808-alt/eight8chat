@@ -33,7 +33,7 @@ const ChangeDisplayName = ({ userid }: { userid: number }) => {
       const status = await setName(displayName, userid);
       const { result, message } = JSON.parse(status);
       if (result === "ERR") {
-        throw new Error("Server Error!" + message);
+        throw new Error("Server Error!" + JSON.stringify(message));
       }
       await Swal.fire({
         title: "Success!",
