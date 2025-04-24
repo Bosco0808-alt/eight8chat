@@ -17,6 +17,6 @@ export async function setName(displayName: string, userid: number) {
     return JSON.stringify({ result: "SUCCESS" });
   } catch (err) {
     console.error(err);
-    return JSON.stringify({ result: "ERR" });
+    return JSON.stringify({ result: "ERR", message: err });
   }
 }

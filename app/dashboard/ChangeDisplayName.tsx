@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import DisplayNameForm from "../welcome/displaynameform";
 import Swal from "sweetalert2";
 import { setName } from "@/actions";
 import { useRouter } from "next/navigation";
@@ -32,9 +31,9 @@ const ChangeDisplayName = ({ userid }: { userid: number }) => {
     }
     try {
       const status = await setName(displayName, userid);
-      const { result } = JSON.parse(status);
+      const { result, message } = JSON.parse(status);
       if (result === "ERR") {
-        throw new Error("Server Error!");
+        throw new Error("Server Error!" + message);
       }
       await Swal.fire({
         title: "Success!",
