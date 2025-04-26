@@ -13,7 +13,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
     adapter: NeonAdapter(pool),
     providers: [
       Resend({
-        from: "Test <onboarding@resend.dev>",
+        from: "eight8chat.com",
         apiKey: process.env.AUTH_RESEND_KEY,
       }),
     ],
