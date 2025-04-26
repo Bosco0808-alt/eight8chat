@@ -1,12 +1,10 @@
 "use client";
-import { useState } from "react";
 import Swal from "sweetalert2";
 import { setName } from "@/actions";
 import { useRouter } from "next/navigation";
 
 const ChangeDisplayName = ({ userid }: { userid: number }) => {
   const router = useRouter();
-  const [isSettingDisplayName, setIsSettingDisplayName] = useState(false);
   const handleClick = async () => {
     const result = await Swal.fire({
       title: "Edit Display Name",
