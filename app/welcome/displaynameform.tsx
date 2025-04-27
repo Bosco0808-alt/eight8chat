@@ -2,10 +2,8 @@
 
 import { setName } from "@/actions";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Swal from "sweetalert2";
-
-type Type = (arg: boolean) => any;
 
 const DisplayNameForm = ({ userid }: { userid: number }) => {
   const router = useRouter();

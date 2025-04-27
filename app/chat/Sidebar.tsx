@@ -2,8 +2,15 @@
 import { useAtom } from "jotai";
 import { isOpenAtom } from "@/atoms";
 import Swal from "sweetalert2";
+import { addFriendRequest } from "@/actions";
 
-const Sidebar = ({ children }: { children: React.ReactNode }) => {
+const Sidebar = ({
+  children,
+  userId,
+}: {
+  children: React.ReactNode;
+  userId: number | undefined | null;
+}) => {
   const [isOpen, setIsOpen] = useAtom(isOpenAtom); // For responsive sidebar
   const handleClick = async () => {
     // Add friend
@@ -28,7 +35,115 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
     if (!result.isConfirmed) {
       return;
     }
-    console.log(friendID);
+    // console.log(friendID);
+    const unParsedResult = userId
+      ? await addFriendRequest(userId, Number(friendID))
+      : null;
+    if (unParsedResult === null) {
+      return Swal.fire({
+        title: "Error",
+        text: "There was an error, please try again later",
+        icon: "error",
+        timer: 3000,
+      });
+    }
+    const { result: actionResult, message } = JSON.parse(unParsedResult);
+    if (message) {
+      console.error(message);
+    }
+    // Check for errors
+    switch (actionResult) {
+      case "ERR_NO_USERID_OR_FRIENDID":
+        Swal.fire({
+          title: "Error",
+          text: "Please enter a valid ID",
+          icon: "error",
+          timer: 3000,
+        });
+        break;
+      case "ERR_SAME_USER":
+        Swal.fire({
+          title: "Error",
+          text: "You cannot add yourself as a friend",
+          icon: "error",
+          timer: 3000,
+        });
+        break;
+      case "ERR_INVALID_USERID_OR_FRIENDID":
+        Swal.fire({
+          title: "Error",
+          text: "Please enter a valid ID",
+          icon: "error",
+          timer: 3000,
+        });
+        break;
+      case "ERR_NO_USER":
+        Swal.fire({
+          title: "Error",
+          text: "User not found",
+          icon: "error",
+          timer: 3000,
+        });
+        break;
+      case "ERR_NO_FRIEND":
+        Swal.fire({
+          title: "Error",
+          text: "Friend not found",
+          icon: "error",
+          timer: 3000,
+        });
+        break;
+      case "ERR_ALREADY_FRIENDS":
+        Swal.fire({
+          title: "Error",
+          text: "You are already friends with this user",
+          icon: "error",
+          timer: 3000,
+        });
+        break;
+      case "ERR_ALREADY_SENT_REQUEST":
+        Swal.fire({
+          title: "Error",
+          text: "You have already sent a friend request to this user",
+          icon: "error",
+          timer: 3000,
+        });
+        break;
+      case "ERR_ALREADY_RECEIVED_REQUEST":
+        Swal.fire({
+          title: "Error",
+          text: "You have already received a friend request from this user",
+          icon: "error",
+          timer: 3000,
+        });
+        break;
+      case "ERR":
+        Swal.fire({
+          title: "Error",
+          text: "There was an error, please try again later",
+          icon: "error",
+          timer: 3000,
+        });
+        break;
+      // End of error checking
+      case "SUCCESS":
+        Swal.fire({
+          title: "Success",
+          text: "Friend request sent successfully",
+          icon: "success",
+          timer: 3000,
+        });
+        break;
+      default:
+        Swal.fire({
+          title: "Error",
+          text: "There was an error, please try again later",
+          icon: "error",
+          timer: 3000,
+        });
+        break;
+    }
+    // End of switch case just in case of this code is too unreadable
   };
   return (
     <div className="container-fluid vh-100">
