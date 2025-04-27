@@ -3,6 +3,7 @@ import { useAtom } from "jotai";
 import { isOpenAtom } from "@/atoms";
 import Swal from "sweetalert2";
 import { addFriendRequest } from "@/actions";
+import Link from "next/link";
 
 const Sidebar = ({
   children,
@@ -157,11 +158,16 @@ const Sidebar = ({
           <button className="btn btn-primary" onClick={handleClick}>
             + Add New Friend
           </button>
-          <button className="btn btn-secondary mt-2">
+          <Link href="/chat/friendrequests" className="btn btn-secondary mt-2">
             Check Friend Requests
-          </button>
+          </Link>
         </nav>
-        <main className={`col-12 col-md-9 ${isOpen ? "d-none" : "d-flex"}`}>
+        <main
+          className={`col-12 col-md-9 ${
+            isOpen ? "d-none" : "d-flex flex-column" // DO NOT GET RID OF FLEX COLUMN
+            // OR ELSE THE MAIN CONTENT WILL NOT WORK AND STACK HORIZONTALLY
+          }`}
+        >
           {children}
         </main>
       </div>

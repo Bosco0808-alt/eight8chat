@@ -15,7 +15,7 @@ export default async function Home() {
             <h1 className="display-4 mb-4">Eight8Chat</h1>
 
             <Link className="btn btn-primary btn-lg" href={"/api/auth/signin"}>
-              Sign In With Email
+              Sign In
             </Link>
           </div>
         </div>
