@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@auth/neon-adapter": "^1.8.0",
-    "@auth/pg-adapter": "^1.8.0",
     "@neondatabase/serverless": "^1.0.0",
     "@prisma/client": "^6.6.0",
     "bootstrap": "^5.3.5",

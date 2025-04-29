@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import ReceivedFriendRequest from "./ReceivedFriendRequest";
 
 export default async function FriendRequests() {
   const session = await auth();
@@ -23,32 +24,29 @@ export default async function FriendRequests() {
       sender: {
         select: {
           name: true,
+          email: true,
         },
       },
     },
   });
+  /* const handleRejectClick = async (requestId: string) => {
+    // Handle reject click
+    try {
+      await rejectFriendRequest(requestId);
+    } catch (error) {
+      console.error("Error rejecting friend request:", error);
+    }
+  }; */
   return (
     <>
       <h1>Friend Requests</h1>
       <p>Here you can manage your friend requests.</p>
-      {/*friendRequests.length === 0 ? (
-        <p>You have no friend requests.</p>
-      ) : (
-        <ul>
-          {friendRequests.map((request) => (
-            <li key={request.id}>
-              {request.senderId === Number(session?.user?.id) ? (
-                <>You sent a friend request to ${request.receiverId}</>
-              ) : (
-                <>{request.senderId} sent you a friend request</>
-              )}
-            </li>
-          ))}
-        </ul>
-      )*/}
+
       <h3>Received friend requests</h3>
       {friendRequests.filter(
-        (request) => request.receiverId === Number(session?.user?.id)
+        (request) =>
+          request.receiverId === Number(session?.user?.id) &&
+          request.status !== "REJECTED"
       ).length === 0 ? (
         <p>You have no received friend requests.</p>
       ) : (
@@ -57,14 +55,18 @@ export default async function FriendRequests() {
             .filter(
               (request) => request.receiverId === Number(session?.user?.id)
             )
-            .map((request) => (
-              <li key={request.id}>
-                {request.senderId} {`(${request.sender.name})`} sent you a
-                friend request
-                <button className="btn btn-primary m-2">Accept</button>
-                <button className="btn btn-danger m-2">Reject</button>
-              </li>
-            ))}
+            .map((request) =>
+              request.status === "REJECTED" ? null : (
+                <ReceivedFriendRequest
+                  key={request.id}
+                  id={request.id}
+                  senderId={request.senderId}
+                  senderName={
+                    request.sender.name || request.sender.email || "No Name"
+                  }
+                />
+              )
+            )}
         </ul>
       )}
       <h3>Sent friend requests</h3>
@@ -79,7 +81,23 @@ export default async function FriendRequests() {
             .map((request) => (
               <li key={request.id}>
                 You sent a friend request to {request.receiverId}
-                {` (${request.receiver.name})`}
+                {` (${request.receiver.name}) `}
+                <span
+                  className={
+                    request.status === "REJECTED"
+                      ? "badge bg-danger"
+                      : request.status === "ACCEPTED"
+                      ? "badge bg-success"
+                      : "badge bg-warning"
+                  }
+                >
+                  {request.status.replace(
+                    request.status,
+                    (status) =>
+                      status.charAt(0).toUpperCase() +
+                      status.slice(1).toLowerCase()
+                  )}
+                </span>
               </li>
             ))}
         </ul>

@@ -66,7 +66,7 @@ export async function addFriendRequest(userid: number, friendid: number) {
     const sentRequest = currentUser.sentRequests.find(
       (request) => request.receiverId === friendid
     );
-    if (sentRequest) {
+    if (sentRequest && sentRequest.status !== "REJECTED") {
       return JSON.stringify({ result: "ERR_ALREADY_SENT_REQUEST" });
     }
     // Check if the friend has already sent a request
@@ -142,6 +142,40 @@ export async function addFriend(userid: number, friendid: number) {
             id: friendid,
           },
         },
+      },
+    });
+    return JSON.stringify({ result: "SUCCESS" });
+  } catch (err) {
+    console.error(err);
+    return JSON.stringify({ result: "ERR", message: err });
+  }
+}
+
+export async function rejectFriendRequest(requestId: string) {
+  if (!requestId) {
+    return JSON.stringify({ result: "ERR_NO_REQUESTID" });
+  }
+  try {
+    // Check if the request exists
+    const request = await prisma.friendRequests.findUnique({
+      where: {
+        id: requestId,
+      },
+      include: {
+        sender: true,
+        receiver: true,
+      },
+    });
+    if (!request || !request.sender || !request.receiver) {
+      return JSON.stringify({ result: "ERR_NO_REQUEST" });
+    }
+    // Delete the request
+    await prisma.friendRequests.update({
+      where: {
+        id: request.id,
+      },
+      data: {
+        status: "REJECTED",
       },
     });
     return JSON.stringify({ result: "SUCCESS" });
