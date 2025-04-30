@@ -63,23 +63,28 @@ export async function addFriendRequest(userid: number, friendid: number) {
     }
 
     // Check if a request has already been sent
-    const sentRequest = currentUser.sentRequests.find(
+    const sentRequests = currentUser.sentRequests.filter(
       (request) => request.receiverId === friendid
     );
-    if (sentRequest && sentRequest.status !== "REJECTED") {
-      return JSON.stringify({ result: "ERR_ALREADY_SENT_REQUEST" });
+    for (const request of sentRequests) {
+      if (request.status === "PENDING") {
+        return JSON.stringify({ result: "ERR_ALREADY_SENT_REQUEST" });
+      }
     }
     // Check if the friend has already sent a request
-    const receivedRequest = currentUser.receivedRequests.find(
+    const receivedRequest = currentUser.receivedRequests.filter(
       (request) => request.senderId === friendid
     );
-    if (receivedRequest) {
-      return JSON.stringify({ result: "ERR_ALREADY_RECEIVED_REQUEST" });
+    for (const request of receivedRequest) {
+      if (request.status === "PENDING") {
+        return JSON.stringify({ result: "ERR_ALREADY_RECEIVED_REQUEST" });
+      }
     }
     // Check if the user is already friends with the friend
     const isFriend = currentUser.friends.find(
       (friend) => friend.id === friendid
     );
+
     if (isFriend) {
       return JSON.stringify({ result: "ERR_ALREADY_FRIENDS" });
     }
@@ -94,14 +99,10 @@ export async function addFriendRequest(userid: number, friendid: number) {
   }
 }
 
-export async function addFriend(userid: number, friendid: number) {
+export async function addFriend(requestId: string) {
   // Check for invalid data
   const errors = {
-    ERR_NO_USERID: !userid,
-    ERR_NO_FRIENDID: !friendid,
-    ERR_SAME_USER: userid === friendid,
-    ERR_INVALID_USERID: userid < 0,
-    ERR_INVALID_FRIENDID: friendid < 0,
+    ERR_NO_REQUESTID: !requestId,
   };
 
   for (const [error, condition] of Object.entries(errors)) {
@@ -111,37 +112,80 @@ export async function addFriend(userid: number, friendid: number) {
   }
 
   try {
-    // Check if user and friend exist
-    const currentUser = await prisma.users.findUnique({
+    // Check if the request exists
+    const request = await prisma.friendRequests.findUnique({
       where: {
-        id: userid,
+        id: requestId,
+      },
+      include: {
+        sender: true,
+        receiver: true,
+      },
+    });
+    if (!request || !request.sender || !request.receiver) {
+      return JSON.stringify({ result: "ERR_NO_REQUEST" });
+    }
+    // Check if the request is already rejected
+    if (request.status === "REJECTED") {
+      return JSON.stringify({ result: "ERR_ALREADY_REJECTED" });
+    }
+    // Check if they are already friends
+    const { sender, receiver } = request;
+    const senderFriends = await prisma.users.findUnique({
+      where: {
+        id: sender.id,
       },
       include: {
         friends: true,
       },
     });
-    if (!currentUser) {
-      return JSON.stringify({ result: "ERR_NO_USER" });
-    }
-    const friend = await prisma.users.findUnique({
+    const receiverFriends = await prisma.users.findUnique({
       where: {
-        id: friendid,
+        id: receiver.id,
+      },
+      include: {
+        friends: true,
       },
     });
-    if (!friend) {
-      return JSON.stringify({ result: "ERR_NO_FRIEND" });
+    if (
+      senderFriends?.friends.some((friend) => friend.id === receiver.id) ||
+      receiverFriends?.friends.some((friend) => friend.id === sender.id)
+    ) {
+      return JSON.stringify({ result: "ERR_ALREADY_FRIENDS" });
     }
-    // add friend to user
+    // Add friend to user
     await prisma.users.update({
       where: {
-        id: userid,
+        id: request.receiverId,
       },
       data: {
         friends: {
           connect: {
-            id: friendid,
+            id: request.senderId,
           },
         },
+      },
+    });
+    // Add friend to user
+    await prisma.users.update({
+      where: {
+        id: request.senderId,
+      },
+      data: {
+        friends: {
+          connect: {
+            id: request.receiverId,
+          },
+        },
+      },
+    });
+    // Set the status of the request to accepted
+    await prisma.friendRequests.update({
+      where: {
+        id: requestId,
+      },
+      data: {
+        status: "ACCEPTED",
       },
     });
     return JSON.stringify({ result: "SUCCESS" });

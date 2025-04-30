@@ -29,14 +29,6 @@ export default async function FriendRequests() {
       },
     },
   });
-  /* const handleRejectClick = async (requestId: string) => {
-    // Handle reject click
-    try {
-      await rejectFriendRequest(requestId);
-    } catch (error) {
-      console.error("Error rejecting friend request:", error);
-    }
-  }; */
   return (
     <>
       <h1>Friend Requests</h1>
@@ -46,7 +38,7 @@ export default async function FriendRequests() {
       {friendRequests.filter(
         (request) =>
           request.receiverId === Number(session?.user?.id) &&
-          request.status !== "REJECTED"
+          request.status === "PENDING"
       ).length === 0 ? (
         <p>You have no received friend requests.</p>
       ) : (
