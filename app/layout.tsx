@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
 import Navbar from "./Navbar";
+import SubNavbar from "./SubNavbar";
 
 export const metadata: Metadata = {
   title: "Eight8Chat - Your Ultimate Web Chat App",
@@ -18,6 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Navbar />
+        <SubNavbar />
         {children}
       </body>
     </html>
