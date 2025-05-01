@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import Link from "next/link";
 
 const Friends = async () => {
   const session = await auth();
@@ -23,9 +24,12 @@ const Friends = async () => {
           {friends.map((friend) => (
             <li key={friend.id}>
               {friend.name || friend.email || "No Name"} (ID: {friend.id})
-              <button className="btn btn-sm btn-primary m-2">
+              <Link
+                href={`/chat/${friend.id}`}
+                className="btn btn-sm btn-primary m-2"
+              >
                 Chat with them!
-              </button>
+              </Link>
               <button className="btn btn-sm btn-danger m-2">Unfriend</button>
             </li>
           ))}

@@ -151,7 +151,7 @@ const Sidebar = ({
     <div className="container-fluid vh-100">
       <div className="row h-100">
         <nav
-          className={`col-md-1 bg-light ${
+          className={`col-md-2 bg-light ${
             isOpen ? "d-flex" : "d-none d-md-flex"
           } flex-column align-items-center`}
         >
@@ -171,7 +171,7 @@ const Sidebar = ({
         </nav>
         <main
           className={`col-12 col-md-9 ${
-            isOpen ? "d-none" : "d-flex flex-column" // DO NOT GET RID OF FLEX COLUMN
+            isOpen ? "d-none" : "d-flex flex-column flex-column" // DO NOT GET RID OF FLEX COLUMN
             // OR ELSE THE MAIN CONTENT WILL NOT WORK AND STACK HORIZONTALLY
           }`}
         >
