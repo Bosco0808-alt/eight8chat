@@ -80,7 +80,7 @@ export default async function FriendRequests() {
                       ? "badge bg-danger"
                       : request.status === "ACCEPTED"
                       ? "badge bg-success"
-                      : "badge bg-warning"
+                      : "badge bg-warning text-dark"
                   }
                 >
                   {request.status.replace(

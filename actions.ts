@@ -2,6 +2,7 @@
 import prisma from "./lib/prisma";
 
 export async function setName(displayName: string, userid: number) {
+  // Check for invalid data
   if (!displayName) {
     return JSON.stringify({ result: "ERR_NO_DISPLAYNAME" });
   }
@@ -110,7 +111,9 @@ export async function addFriend(requestId: string) {
       return JSON.stringify({ result: error });
     }
   }
-
+  /* If you are wondering why i am using a for loop even though i can just use an if statement, it is because i am lazy and i want to add more errors in the future without having to write a lot of code.
+   * In fact, the previous sentence was written by an AI.
+   */
   try {
     // Check if the request exists
     const request = await prisma.friendRequests.findUnique({

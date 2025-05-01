@@ -4,6 +4,7 @@ import { isOpenAtom } from "@/atoms";
 import Swal from "sweetalert2";
 import { addFriendRequest } from "@/actions";
 import Link from "next/link";
+import styles from "./Sidebar.module.css";
 
 const Sidebar = ({
   children,
@@ -160,6 +161,12 @@ const Sidebar = ({
           </button>
           <Link href="/chat/friendrequests" className="btn btn-secondary mt-2">
             Check Friend Requests
+          </Link>
+          <Link
+            href="/chat/friends"
+            className={`btn mt-2 text-white ${styles.mediumSeaGreen}`}
+          >
+            Manage and check friends
           </Link>
         </nav>
         <main
