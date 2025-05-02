@@ -42,6 +42,8 @@ model users {
   friendOf         users[]          @relation("UserFriends")
   sentRequests     FriendRequests[] @relation("SentRequests")
   receivedRequests FriendRequests[] @relation("ReceivedRequests")
+  sentMessages     Messages[]       @relation("SentMessages")
+  receivedMessages Messages[]       @relation("ReceivedMessages")
 }
 
 model verification_token {
@@ -62,4 +64,14 @@ model FriendRequests {
   createdAt  DateTime @default(now())
   sender     users    @relation("SentRequests", fields: [senderId], references: [id])
   receiver   users    @relation("ReceivedRequests", fields: [receiverId], references: [id])
+}
+
+model Messages {
+  id         String   @id @default(uuid())
+  senderId   Int
+  receiverId Int
+  content    String
+  createdAt  DateTime @default(now())
+  sender     users    @relation("SentMessages", fields: [senderId], references: [id])
+  receiver   users    @relation("ReceivedMessages", fields: [receiverId], references: [id])
 }

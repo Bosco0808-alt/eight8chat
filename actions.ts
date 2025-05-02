@@ -1,5 +1,11 @@
 "use server";
 import prisma from "./lib/prisma";
+import { auth } from "./lib/auth";
+
+async function getUser() {
+  const session = await auth();
+  return session;
+} // for authentication
 
 export async function setName(displayName: string, userid: number) {
   // Check for invalid data
@@ -7,6 +13,10 @@ export async function setName(displayName: string, userid: number) {
     return JSON.stringify({ result: "ERR_NO_DISPLAYNAME" });
   }
   try {
+    const session = await getUser();
+    if (Number(session?.user?.id) !== userid) {
+      return JSON.stringify({ result: "ERR_NOT_AUTHENTICATED" });
+    }
     await prisma.users.update({
       where: {
         id: userid,
@@ -39,6 +49,10 @@ export async function addFriendRequest(userid: number, friendid: number) {
     // Check if user and friend exist
 
     // User
+    const session = await getUser();
+    if (Number(session?.user?.id) !== userid) {
+      return JSON.stringify({ result: "ERR_NOT_AUTHENTICATED" });
+    }
     const currentUser = await prisma.users.findUnique({
       where: {
         id: userid,
@@ -128,6 +142,11 @@ export async function addFriend(requestId: string) {
     if (!request || !request.sender || !request.receiver) {
       return JSON.stringify({ result: "ERR_NO_REQUEST" });
     }
+    // Check if the user is authenticated
+    const session = await getUser();
+    if (Number(session?.user?.id) !== request.receiverId) {
+      return JSON.stringify({ result: "ERR_NOT_AUTHENTICATED" });
+    }
     // Check if the request is already rejected
     if (request.status === "REJECTED") {
       return JSON.stringify({ result: "ERR_ALREADY_REJECTED" });
@@ -216,7 +235,12 @@ export async function rejectFriendRequest(requestId: string) {
     if (!request || !request.sender || !request.receiver) {
       return JSON.stringify({ result: "ERR_NO_REQUEST" });
     }
-    // Delete the request
+    // Check if the user is authenticated
+    const session = await getUser();
+    if (Number(session?.user?.id) !== request.receiverId) {
+      return JSON.stringify({ result: "ERR_NOT_AUTHENTICATED" });
+    }
+    // Reject the request
     await prisma.friendRequests.update({
       where: {
         id: request.id,
@@ -231,3 +255,5 @@ export async function rejectFriendRequest(requestId: string) {
     return JSON.stringify({ result: "ERR", message: err });
   }
 }
+
+export async function sendMessage(senderId: string, receiverId: string) {}
