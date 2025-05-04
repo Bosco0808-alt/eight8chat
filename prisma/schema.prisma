@@ -70,7 +70,7 @@ model Messages {
   id         String   @id @default(uuid())
   senderId   Int
   receiverId Int
-  content    String
+  content    String // uses postgres text under the hood so dont refactor to something dumb like @db.Text
   createdAt  DateTime @default(now())
   sender     users    @relation("SentMessages", fields: [senderId], references: [id])
   receiver   users    @relation("ReceivedMessages", fields: [receiverId], references: [id])

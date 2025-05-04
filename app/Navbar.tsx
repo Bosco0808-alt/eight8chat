@@ -26,7 +26,7 @@ const Navbar = async () => {
         )}
         {session && (
           <li className="nav-item active">
-            <Link className="nav-link" href="/dashboard">
+            <Link className="nav-link" href="/chat/dashboard">
               👤{" "}
               {session?.user?.name ? session?.user?.name : session?.user?.email}
             </Link>

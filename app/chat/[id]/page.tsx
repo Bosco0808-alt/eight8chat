@@ -1,7 +1,9 @@
 import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import ChattingInterface from "./ChattingInterface";
+import Link from "next/link";
 
-const ChattingInterface = async ({
+const ChattingInterfaceWrapper = async ({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -22,19 +24,25 @@ const ChattingInterface = async ({
     (friend) => friend.id === Number(id)
   );
   if (!friend) {
-    return <p>You are not friends with this user.</p>;
+    return (
+      <>
+        <h1>You are not friends with this user.</h1>
+        <Link href="/chat">
+          <button className="btn btn-primary">Go back to chat</button>
+        </Link>
+      </>
+    );
   }
   return (
     <>
       <h1>Chat with {friend.name || friend.email || "Unnamed user"}</h1>
-      <form>
-        <textarea className="form-control" />
-        <button type="submit" className="btn btn-primary mt-2">
-          Send (Doesn't work yet)
-        </button>
-      </form>
+      <ChattingInterface
+        senderId={currentUser?.id ?? Number(session?.user?.id)}
+        receiverId={friend.id}
+      />
+      {/* DONT SWAP THE PROPS */}
     </>
   );
 };
 
-export default ChattingInterface;
+export default ChattingInterfaceWrapper;

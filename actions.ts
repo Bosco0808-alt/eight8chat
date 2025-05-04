@@ -4,6 +4,9 @@ import { auth } from "./lib/auth";
 
 async function getUser() {
   const session = await auth();
+  if (!session || !session.user || !session.user.id) {
+    throw new Error("User is not authenticated");
+  }
   return session;
 } // for authentication
 
@@ -14,6 +17,7 @@ export async function setName(displayName: string, userid: number) {
   }
   try {
     const session = await getUser();
+    // console.log("session", session);
     if (Number(session?.user?.id) !== userid) {
       return JSON.stringify({ result: "ERR_NOT_AUTHENTICATED" });
     }
@@ -256,4 +260,136 @@ export async function rejectFriendRequest(requestId: string) {
   }
 }
 
-export async function sendMessage(senderId: string, receiverId: string) {}
+export async function sendMessage(
+  senderId: number,
+  receiverId: number,
+  message: string
+): Promise<string> {
+  if (!senderId || !receiverId) {
+    return JSON.stringify({ result: "ERR_NO_SENDERID_OR_RECEIVERID" });
+  }
+  if (senderId === receiverId) {
+    return JSON.stringify({ result: "ERR_SAME_USER" });
+  }
+  if (senderId < 0 || receiverId < 0) {
+    return JSON.stringify({ result: "ERR_INVALID_SENDERID_OR_RECEIVERID" });
+  }
+  if (!message) {
+    return JSON.stringify({ result: "ERR_NO_MESSAGE" });
+  }
+  try {
+    // Check if the user is authenticated
+
+    const session = await getUser();
+    if (Number(session?.user?.id) !== senderId) {
+      return JSON.stringify({ result: "ERR_NOT_AUTHENTICATED" });
+    }
+
+    // Check if the sender and receiver exist
+    const sender = await prisma.users.findUnique({
+      where: {
+        id: Number(senderId),
+      },
+    });
+    const receiver = await prisma.users.findUnique({
+      where: {
+        id: Number(receiverId),
+      },
+    });
+    if (!sender || !receiver) {
+      return JSON.stringify({ result: "ERR_NO_SENDER_OR_RECEIVER" });
+    }
+    // Check if they are friends
+    const senderFriends = await prisma.users.findUnique({
+      where: {
+        id: Number(senderId),
+      },
+      include: {
+        friends: true,
+      },
+    });
+    if (!senderFriends?.friends.some((friend) => friend.id === receiver.id)) {
+      return JSON.stringify({ result: "ERR_NOT_FRIENDS" });
+    }
+    await prisma.messages.create({
+      data: {
+        senderId: Number(senderId),
+        receiverId: Number(receiverId),
+        content: message,
+      },
+    });
+    return JSON.stringify({ result: "SUCCESS" });
+  } catch (err) {
+    console.error(err);
+    return JSON.stringify({
+      result: "ERR",
+      message: err instanceof Error ? err.message : String(err),
+    });
+  }
+}
+
+// The fact that this thing's sole purpose is for the subscribe function:
+export async function getMessages(senderId: number, receiverId: number) {
+  if (!senderId || !receiverId) {
+    return JSON.stringify({ result: "ERR_NO_SENDERID_OR_RECEIVERID" });
+  }
+  try {
+    // Check if the user is authenticated
+    const session = await getUser();
+    if (Number(session?.user?.id) !== Number(senderId)) {
+      return JSON.stringify({ result: "ERR_NOT_AUTHENTICATED" });
+    }
+    // Check if the sender and receiver exist
+    const sender = await prisma.users.findUnique({
+      where: {
+        id: Number(senderId),
+      },
+    });
+    const receiver = await prisma.users.findUnique({
+      where: {
+        id: Number(receiverId),
+      },
+    });
+    if (!sender || !receiver) {
+      return JSON.stringify({ result: "ERR_NO_SENDER_OR_RECEIVER" });
+    }
+    // Check if they are friends
+    const senderFriends = await prisma.users.findUnique({
+      where: {
+        id: Number(senderId),
+      },
+      include: {
+        friends: true,
+      },
+    });
+    const receiverFriends = await prisma.users.findUnique({
+      where: {
+        id: Number(receiverId),
+      },
+      include: {
+        friends: true,
+      },
+    });
+    if (
+      !senderFriends?.friends.some((friend) => friend.id === receiver.id) ||
+      !receiverFriends?.friends.some((friend) => friend.id === sender.id)
+    ) {
+      return JSON.stringify({ result: "ERR_NOT_FRIENDS" });
+    }
+    // Get messages
+    const messages = await prisma.messages.findMany({
+      where: {
+        OR: [
+          { senderId: Number(senderId), receiverId: Number(receiverId) },
+          { senderId: Number(receiverId), receiverId: Number(senderId) },
+        ],
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+    return JSON.stringify({ result: "SUCCESS", messages });
+  } catch (err) {
+    console.error(err);
+  }
+}

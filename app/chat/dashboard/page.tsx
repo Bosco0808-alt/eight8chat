@@ -9,7 +9,7 @@ const Dashboard = async () => {
     redirect("/api/auth/signin");
   }
   return (
-    <>
+    <div>
       <h1 className="m-2">👤 {session?.user?.name ?? "No Name"}</h1>
       <span className="m-2">ID: {session?.user?.id}</span>
       <br />
@@ -18,7 +18,7 @@ const Dashboard = async () => {
       <Link href="/api/auth/signout" className="btn btn-danger m-2">
         Sign Out
       </Link>
-    </>
+    </div>
   );
 };
 
