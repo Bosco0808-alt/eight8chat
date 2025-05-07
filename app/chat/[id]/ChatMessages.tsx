@@ -61,7 +61,6 @@ const ChatMessages = ({
           setResult(result);
           setIsError(false);
           setErrMessage("");
-          subscribe(userId, friendId);
           break;
         case "ERR":
           setIsLoading(false);
@@ -77,6 +76,10 @@ const ChatMessages = ({
           break;
       }
     }
+    setInterval(() => {
+      subscribe(userId, friendId);
+    }, 1000); // short polling replacing long polling(for now)
+    // TODO: replace with long polling that actually scales and not recursively spam requests to server
     subscribe(userId, friendId); // Will recursively call itself for new messages(long polling)
   }, []);
   return (
