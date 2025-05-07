@@ -17,10 +17,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body style={{ overflow: "hidden" }}>
         <Navbar />
-        <SubNavbar />
-        {children}
+        <div className="mt-5 pt-3">
+          <SubNavbar />
+          {children}
+        </div>
       </body>
     </html>
   );

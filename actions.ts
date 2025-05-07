@@ -329,25 +329,31 @@ export async function sendMessage(
 }
 
 // The fact that this thing's sole purpose is for the subscribe function:
-export async function getMessages(senderId: number, receiverId: number) {
-  if (!senderId || !receiverId) {
+export async function getMessages(
+  userId: number,
+  friendId: number
+): Promise<string> {
+  if (!userId || !friendId) {
     return JSON.stringify({ result: "ERR_NO_SENDERID_OR_RECEIVERID" });
+  }
+  if (userId === friendId) {
+    return JSON.stringify({ result: "ERR_SAME_USER" });
   }
   try {
     // Check if the user is authenticated
     const session = await getUser();
-    if (Number(session?.user?.id) !== Number(senderId)) {
+    if (Number(session?.user?.id) !== Number(userId)) {
       return JSON.stringify({ result: "ERR_NOT_AUTHENTICATED" });
     }
     // Check if the sender and receiver exist
     const sender = await prisma.users.findUnique({
       where: {
-        id: Number(senderId),
+        id: Number(userId),
       },
     });
     const receiver = await prisma.users.findUnique({
       where: {
-        id: Number(receiverId),
+        id: Number(friendId),
       },
     });
     if (!sender || !receiver) {
@@ -356,7 +362,7 @@ export async function getMessages(senderId: number, receiverId: number) {
     // Check if they are friends
     const senderFriends = await prisma.users.findUnique({
       where: {
-        id: Number(senderId),
+        id: Number(userId),
       },
       include: {
         friends: true,
@@ -364,7 +370,7 @@ export async function getMessages(senderId: number, receiverId: number) {
     });
     const receiverFriends = await prisma.users.findUnique({
       where: {
-        id: Number(receiverId),
+        id: Number(friendId),
       },
       include: {
         friends: true,
@@ -380,9 +386,23 @@ export async function getMessages(senderId: number, receiverId: number) {
     const messages = await prisma.messages.findMany({
       where: {
         OR: [
-          { senderId: Number(senderId), receiverId: Number(receiverId) },
-          { senderId: Number(receiverId), receiverId: Number(senderId) },
+          { senderId: Number(userId), receiverId: Number(friendId) },
+          { senderId: Number(friendId), receiverId: Number(userId) },
         ],
+      },
+      include: {
+        sender: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        receiver: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "asc",
@@ -391,5 +411,6 @@ export async function getMessages(senderId: number, receiverId: number) {
     return JSON.stringify({ result: "SUCCESS", messages });
   } catch (err) {
     console.error(err);
+    return JSON.stringify({ result: "ERR", errMessage: err });
   }
 }

@@ -20,6 +20,7 @@ const ChattingInterface = ({
         text: "Please enter a non-empty message.",
       });
     }
+    setPendingMessage("");
     try {
       const response = await sendMessage(senderId, receiverId, pendingMessage);
       const { result, message } = JSON.parse(response);

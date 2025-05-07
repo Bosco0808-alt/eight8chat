@@ -5,7 +5,7 @@ import SidebarExpander from "./SidebarExpander";
 const Navbar = async () => {
   const session = await auth();
   return (
-    <nav className="navbar navbar-expand navbar-light bg-light">
+    <nav className="navbar navbar-expand navbar-light bg-light fixed-top">
       {session && <SidebarExpander />}
       <Link href={session ? "/chat" : "/"} className="navbar-brand m-2">
         Home

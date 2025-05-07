@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import ChattingInterface from "./ChattingInterface";
+import ChatMessages from "./ChatMessages";
 import Link from "next/link";
 
 const ChattingInterfaceWrapper = async ({
@@ -36,6 +37,8 @@ const ChattingInterfaceWrapper = async ({
   return (
     <>
       <h1>Chat with {friend.name || friend.email || "Unnamed user"}</h1>
+      <ChatMessages userId={userId} friendId={friend.id} />
+
       <ChattingInterface
         senderId={currentUser?.id ?? Number(session?.user?.id)}
         receiverId={friend.id}
