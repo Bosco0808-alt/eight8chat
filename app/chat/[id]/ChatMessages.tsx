@@ -21,8 +21,7 @@ const ChatMessages = ({
   // effects
   useEffect(() => {
     if (scrollableRef.current) {
-      scrollableRef.current.scrollTop =
-        scrollableRef.current.scrollHeight - scrollableRef.current.clientHeight;
+      scrollableRef.current.scrollTop = scrollableRef.current.scrollHeight;
     }
   }, []);
   useEffect(() => {
