@@ -80,7 +80,7 @@ const ChatMessages = ({
     subscribe(userId, friendId); // Will recursively call itself for new messages(long polling)
   }, []);
   return (
-    <div style={{ overflowY: "scroll" }} className="h-50" ref={scrollableRef}>
+    <div style={{ overflowY: "scroll", height: "50vh" }} ref={scrollableRef}>
       {messages && messages.length > 0 ? (
         messages.map((message: any) => {
           return (
