@@ -5,7 +5,6 @@ import Swal from "sweetalert2";
 import { addFriendRequest } from "@/actions";
 import Link from "next/link";
 import styles from "./Sidebar.module.css";
-
 const Sidebar = ({
   children,
   userId,
@@ -159,15 +158,30 @@ const Sidebar = ({
           <button className="btn btn-primary" onClick={handleClick}>
             + Add New Friend
           </button>
-          <Link href="/chat/friendrequests" className="btn btn-secondary mt-2">
-            Check Friend Requests
-          </Link>
-          <Link
-            href="/chat/friends"
-            className={`btn mt-2 text-white ${styles.mediumSeaGreen}`}
+          <button
+            className={`btn mt-2 text-white btn btn-secondary`}
+            onClick={() => setIsOpen(false)}
           >
-            Manage and check friends
-          </Link>
+            <Link
+              href="/chat/friendrequests"
+              className="text-white"
+              style={{ textDecoration: "none" }}
+            >
+              Check Friend Requests
+            </Link>
+          </button>
+          <button
+            className={`btn mt-2 text-white ${styles.mediumSeaGreen}`}
+            onClick={() => setIsOpen(false)}
+          >
+            <Link
+              href="/chat/friends"
+              className="text-white"
+              style={{ textDecoration: "none" }}
+            >
+              Manage and check friends
+            </Link>
+          </button>
         </nav>
         <main
           className={`col-12 col-md-9 ${

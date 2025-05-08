@@ -23,7 +23,7 @@ const ChatMessages = ({
     if (scrollableRef.current) {
       scrollableRef.current.scrollTop = scrollableRef.current.scrollHeight;
     }
-  }, []);
+  }, [messages]);
   useEffect(() => {
     async function subscribe(userId: number, friendId: number) {
       const unParsedResults = await getMessages(userId, friendId);

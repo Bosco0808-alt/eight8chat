@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body style={{ overflow: "hidden" }}>
         <Navbar />
-        <div className="mt-5 pt-3">
+        <div>
           <SubNavbar />
           {children}
         </div>
