@@ -21,7 +21,11 @@ export default function RootLayout({
       <body style={{ overflow: "hidden" }}>
         <Navbar />
         <div className={styles.mainContentDiv}>
-          {/* This padding is to prevent the content from being hidden behind the navbar */}
+          {/* This padding is to prevent the content from being hidden behind the navbar
+           * Future devs pls don't remove this padding, it is important for the layout
+           * There may be a better way to do this, but this is the easiest way to do so
+           * Wise words from the founder of Eight8Chat
+           */}
           <SubNavbar />
           {children}
         </div>
