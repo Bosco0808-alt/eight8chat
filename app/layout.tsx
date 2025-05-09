@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import styles from "./layout.module.css";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
 import Navbar from "./Navbar";
 import SubNavbar from "./SubNavbar";
@@ -19,7 +20,8 @@ export default function RootLayout({
     <html lang="en">
       <body style={{ overflow: "hidden" }}>
         <Navbar />
-        <div>
+        <div className={styles.mainContentDiv}>
+          {/* This padding is to prevent the content from being hidden behind the navbar */}
           <SubNavbar />
           {children}
         </div>
