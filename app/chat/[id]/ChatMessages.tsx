@@ -41,7 +41,6 @@ const ChatMessages = ({
       eventSource.onerror = (error) => {
         console.error("EventSource failed:", error);
         setIsLoading(false);
-        setIsError(true);
         if (eventSource.readyState === 2) {
           eventSource.close();
           setTimeout(initES, 5000);
