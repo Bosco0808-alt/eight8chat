@@ -102,8 +102,6 @@ const ChattingInterface = ({
         title: "Error",
         text: "Failed to send message.",
       });
-    } finally {
-      setPendingMessage("");
     }
   };
   return (

@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState, useRef, Ref } from "react";
-import { getMessages } from "@/actions";
 import styles from "./ChatMessages.module.scss";
 
 const ChatMessages = ({
@@ -11,9 +10,7 @@ const ChatMessages = ({
   friendId: number;
 }) => {
   // all of da state
-  const [messages, setMessages] = useState([]);
-  const [errMessage, setErrMessage] = useState("");
-  const [result, setResult] = useState("");
+  const [messages, setMessages] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   // refs
@@ -24,6 +21,41 @@ const ChatMessages = ({
       scrollableRef.current.scrollTop = scrollableRef.current.scrollHeight;
     }
   }, [messages]);
+  useEffect(() => {
+    function initES() {
+      const eventSource = new EventSource(
+        `/api/messages?userid=${userId}&friendid=${friendId}`
+      );
+      // sse
+      eventSource.onmessage = (event) => {
+        const newMessages = JSON.parse(JSON.parse(event.data)); // this works don't remove double parsing future devs
+        // 👆 I know my code 😎 --- Bosco0808alt-2
+        // console.log(newMessages);
+        // console.log(typeof newMessages);
+        setMessages(JSON.parse(JSON.stringify(newMessages)));
+        // console.log("messages: " + messages);
+        setIsLoading(false);
+        setIsError(false);
+      };
+
+      eventSource.onerror = (error) => {
+        console.error("EventSource failed:", error);
+        setIsLoading(false);
+        setIsError(true);
+        if (eventSource.readyState === 2) {
+          eventSource.close();
+          setTimeout(initES, 5000);
+        }
+      };
+
+      // Clean up on component unmount
+      return () => {
+        eventSource.close();
+      };
+    }
+    initES();
+  }, [userId, friendId]);
+  /*
   useEffect(() => {
     async function subscribe(userId: number, friendId: number) {
       const unParsedResults = await getMessages(userId, friendId);
@@ -81,6 +113,7 @@ const ChatMessages = ({
     // TODO: replace with long polling that actually scales and not recursively spam requests to server
     subscribe(userId, friendId); // Will recursively call itself for new messages(long polling)
   }, []);
+  */
   return (
     <div style={{ overflowY: "scroll", height: "50vh" }} ref={scrollableRef}>
       {messages && messages.length > 0 ? (
@@ -112,7 +145,7 @@ const ChatMessages = ({
         <p>No messages found.</p>
       )}
       {isLoading && <p>Loading...</p>}
-      {isError && <p>{errMessage}</p>}
+      {isError && <p>An error occured, please try again later</p>}
     </div>
   );
 };
