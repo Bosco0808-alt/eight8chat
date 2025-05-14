@@ -28,8 +28,7 @@ const ChatMessages = ({
       );
       // sse
       eventSource.onmessage = (event) => {
-        const newMessages = JSON.parse(JSON.parse(event.data)); // this works don't remove double parsing future devs
-        // 👆 I know my code 😎 --- Bosco0808alt-2
+        const newMessages = JSON.parse(event.data);
         // console.log(newMessages);
         // console.log(typeof newMessages);
         setMessages(JSON.parse(JSON.stringify(newMessages)));

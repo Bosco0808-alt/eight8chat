@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
             }
             if (JSON.stringify(messages) !== JSON.stringify(prevMessages)) {
                 prevMessages = [...messages];
-                await writer.write(JSON.stringify(messages));
+                await writer.write(messages);
             }
         }
         getMessages();
