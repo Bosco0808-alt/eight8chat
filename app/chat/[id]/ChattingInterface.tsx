@@ -113,7 +113,7 @@ const ChattingInterface = ({
           value={pendingMessage}
         />
         <button type="submit" className="btn btn-primary mt-2">
-          Send (Doesn't work yet)
+          Send
         </button>
       </form>
     </>
