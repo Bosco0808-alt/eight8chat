@@ -4,7 +4,7 @@ import { isOpenAtom } from "@/atoms";
 import Swal from "sweetalert2";
 import { addFriendRequest } from "@/actions";
 import Link from "next/link";
-import styles from "./Sidebar.module.css";
+import styles from "./Sidebar.module.scss";
 const Sidebar = ({
   children,
   userId,
@@ -171,7 +171,7 @@ const Sidebar = ({
             </Link>
           </button>
           <button
-            className={`btn mt-2 text-white ${styles.mediumSeaGreen}`}
+            className={`btn mt-2 ${styles.mediumSeaGreen} text-white`}
             onClick={() => setIsOpen(false)}
           >
             <Link

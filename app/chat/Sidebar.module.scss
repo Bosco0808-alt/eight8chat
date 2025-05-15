@@ -1,0 +1,11 @@
+.mediumSeaGreen {
+  background-color: #3cb371 !important;
+  &:hover {
+    background-color: #2e8b57 !important;
+  }
+  &:active {
+    background-color: #2d8653 !important;
+  }
+}
+
+/* !important for overriding bootstrap styles */
