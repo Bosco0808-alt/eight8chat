@@ -423,7 +423,10 @@ export async function getMessages(
     }
 }
 
-export async function changeColorMode(userId: number): Promise<string> {
+export async function changeColorMode(
+    userId: number,
+    mode: string
+): Promise<string> {
     if (!userId) {
         return JSON.stringify({ result: "ERR_NO_USERID" });
     }
@@ -442,10 +445,7 @@ export async function changeColorMode(userId: number): Promise<string> {
                 id: userId,
             },
             data: {
-                preferedColorMode:
-                    currentUser?.preferedColorMode === "dark"
-                        ? "light"
-                        : "dark",
+                preferedColorMode: mode,
             },
         });
         return JSON.stringify({ result: "SUCCESS" });

@@ -32,7 +32,10 @@ export default function ColorThemeToggler({
     }
     (async () => {
       if (userId) {
-        const unParsedResult = await changeColorMode(userId);
+        const unParsedResult = await changeColorMode(
+          userId,
+          isDarkMode ? "dark" : "light"
+        );
         const { result, errMessage } = JSON.parse(unParsedResult);
         console.log(result, errMessage);
       }
