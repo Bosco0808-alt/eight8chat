@@ -31,19 +31,20 @@ model sessions {
 }
 
 model users {
-  id               Int              @id @default(autoincrement())
-  name             String?          @db.VarChar(255)
-  email            String?          @db.VarChar(255)
-  emailVerified    DateTime?        @db.Timestamptz(6)
-  image            String?
+  id                Int              @id @default(autoincrement())
+  name              String?          @db.VarChar(255)
+  email             String?          @db.VarChar(255)
+  emailVerified     DateTime?        @db.Timestamptz(6)
+  image             String?
+  preferedColorMode String           @default("dark")
   // 👆 Required columns of AuthJS
   // 👇 App specific columns
-  friends          users[]          @relation("UserFriends")
-  friendOf         users[]          @relation("UserFriends")
-  sentRequests     FriendRequests[] @relation("SentRequests")
-  receivedRequests FriendRequests[] @relation("ReceivedRequests")
-  sentMessages     Messages[]       @relation("SentMessages")
-  receivedMessages Messages[]       @relation("ReceivedMessages")
+  friends           users[]          @relation("UserFriends")
+  friendOf          users[]          @relation("UserFriends")
+  sentRequests      FriendRequests[] @relation("SentRequests")
+  receivedRequests  FriendRequests[] @relation("ReceivedRequests")
+  sentMessages      Messages[]       @relation("SentMessages")
+  receivedMessages  Messages[]       @relation("ReceivedMessages")
 }
 
 model verification_token {

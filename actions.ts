@@ -422,3 +422,35 @@ export async function getMessages(
         return JSON.stringify({ result: "ERR", errMessage: err });
     }
 }
+
+export async function changeColorMode(userId: number): Promise<string> {
+    if (!userId) {
+        return JSON.stringify({ result: "ERR_NO_USERID" });
+    }
+    const session = await getUser();
+    if (Number(session?.user?.id) !== userId) {
+        return JSON.stringify({ result: "ERR_NOT_AUTHENTICATED" });
+    }
+    try {
+        const currentUser = await prisma.users.findUnique({
+            where: {
+                id: userId,
+            },
+        });
+        await prisma.users.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                preferedColorMode:
+                    currentUser?.preferedColorMode === "dark"
+                        ? "light"
+                        : "dark",
+            },
+        });
+        return JSON.stringify({ result: "SUCCESS" });
+    } catch (err) {
+        console.error(err);
+        return JSON.stringify({ result: "ERR", errMessage: err });
+    }
+}

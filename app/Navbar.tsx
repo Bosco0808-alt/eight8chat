@@ -1,15 +1,15 @@
 import { auth } from "@/lib/auth";
 import Link from "next/link";
 import SidebarExpander from "./SidebarExpander";
-import ColorThemeToggler from "./ColorThemeToggler";
 import styles from "@/app/Navbar.module.scss";
+import ColorThemeTogglerWrapper from "./ColorThemeTogglerWrapper";
 
 const Navbar = async () => {
   const session = await auth();
   return (
     <nav className={`navbar navbar-expand ${styles.coloredNavbar} fixed-top`}>
       {session && <SidebarExpander />}
-      <ColorThemeToggler />
+      <ColorThemeTogglerWrapper />
       <Link href={session ? "/chat" : "/"} className="navbar-brand m-2">
         Home
       </Link>
