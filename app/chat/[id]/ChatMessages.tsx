@@ -62,8 +62,8 @@ const ChatMessages = ({
               key={message.id}
               className={`border p-2 m-2 rounded ${
                 message.sender.id === userId
-                  ? `${styles.messageBackground1} bg-gradient`
-                  : "bg-light bg-gradient"
+                  ? `${styles.messageBackground1}`
+                  : ""
               }`}
             >
               <p className="text-muted">

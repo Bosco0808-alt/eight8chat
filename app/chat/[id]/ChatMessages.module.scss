@@ -1,3 +1,13 @@
-.messageBackground1 {
-    background-color :#5cc68f;
+@import "bootstrap/scss/mixins/_color-mode.scss";
+
+$color-mode-type: data;
+@include color-mode(light) {
+  .messageBackground1 {
+    background-color: #5cc68f;
+  }
+}
+@include color-mode(dark) {
+  .messageBackground1 {
+    background-color: darken($color: #5cc68f, $amount: 20%);
+  }
 }

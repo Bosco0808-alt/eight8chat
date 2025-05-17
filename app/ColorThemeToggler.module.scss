@@ -1,0 +1,14 @@
+@import "bootstrap/scss/mixins/_color-mode.scss";
+
+$color-mode-type: data;
+
+@include color-mode(dark) {
+  .coloredThemeToggler {
+    @extend .btn-secondary !optional;
+  }
+}
+@include color-mode(light) {
+  .coloredThemeToggler {
+    @extend .btn-light !optional;
+  }
+}

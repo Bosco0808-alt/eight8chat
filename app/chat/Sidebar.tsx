@@ -1,6 +1,6 @@
 "use client";
 import { useAtom } from "jotai";
-import { isOpenAtom } from "@/atoms";
+import { isDarkModeAtom, isOpenAtom } from "@/atoms";
 import Swal from "sweetalert2";
 import { addFriendRequest } from "@/actions";
 import Link from "next/link";
@@ -13,9 +13,11 @@ const Sidebar = ({
   userId: number | undefined | null;
 }) => {
   const [isOpen, setIsOpen] = useAtom(isOpenAtom); // For responsive sidebar
+  const [isDarkMode, setIsDarkMode] = useAtom(isDarkModeAtom);
   const handleClick = async () => {
     // Add friend
     const result = await Swal.fire({
+      theme: isDarkMode ? "dark" : "light",
       title: "Add friend",
       text: "Enter friend ID",
       icon: "info",
@@ -150,7 +152,7 @@ const Sidebar = ({
     <div className="container-fluid vh-100">
       <div className="row h-100">
         <nav
-          className={`col-md-2 bg-light ${
+          className={`col-md-2 ${styles.sidebar} ${
             isOpen ? "d-flex" : "d-none d-md-flex"
           } flex-column align-items-center`}
         >

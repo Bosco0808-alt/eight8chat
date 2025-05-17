@@ -4,6 +4,7 @@ import { isOpenAtom } from "@/atoms";
 import { useAtom } from "jotai";
 import Image from "next/image";
 import Menu from "@/public/menu.svg";
+import styles from "./SidebarExpander.module.scss";
 
 const SidebarExpander = () => {
   const [isOpen, setIsOpen] = useAtom(isOpenAtom);
@@ -14,7 +15,7 @@ const SidebarExpander = () => {
 
   return (
     <button
-      className="btn btn-outline-light d-md-none m-2"
+      className={`btn d-md-none m-2 ${styles.coloredSidebarExpander}`}
       type="button"
       onClick={toggleSidebar}
       aria-controls="sidebar"

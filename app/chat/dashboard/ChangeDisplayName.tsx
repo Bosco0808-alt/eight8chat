@@ -2,11 +2,15 @@
 import Swal from "sweetalert2";
 import { setName } from "@/actions";
 import { useRouter } from "next/navigation";
+import { isDarkModeAtom } from "@/atoms";
+import { useAtom } from "jotai";
 
 const ChangeDisplayName = ({ userid }: { userid: number }) => {
+  const [isDarkMode, setIsDarkMode] = useAtom(isDarkModeAtom);
   const router = useRouter();
   const handleClick = async () => {
     const result = await Swal.fire({
+      theme: isDarkMode ? "dark" : "light",
       title: "Edit Display Name",
       text: "Enter New Display Name",
       icon: "info",

@@ -1,3 +1,7 @@
+@import "bootstrap/scss/mixins/_color-mode.scss";
+
+$color-mode-type: data;
+
 .mediumSeaGreen {
   background-color: #3cb371 !important;
   &:hover {
@@ -5,6 +9,18 @@
   }
   &:active {
     background-color: #2d8653 !important;
+  }
+}
+
+@include color-mode(dark) {
+  .sidebar {
+    @extend .bg-dark !optional;
+  }
+}
+
+@include color-mode(light) {
+  .sidebar {
+    @extend .bg-light !optional;
   }
 }
 

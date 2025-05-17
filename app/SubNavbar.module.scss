@@ -1,0 +1,13 @@
+@import "bootstrap/scss/mixins/_color-mode.scss";
+
+$color-mode-type: data;
+@include color-mode(light) {
+  .coloredSubNavbar {
+    background-color: lighten($color: aqua, $amount: 35%);
+  }
+}
+@include color-mode(dark) {
+  .coloredSubNavbar {
+    background-color: darken($color: aqua, $amount: 35%);
+  }
+}

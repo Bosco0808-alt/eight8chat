@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import styles from "./layout.module.css";
+import styles from "./layout.module.scss";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
 import Navbar from "./Navbar";
 import SubNavbar from "./SubNavbar";
+import BodyThemeWrapper from "./BodyThemeWrapper";
 
 export const metadata: Metadata = {
   title: "Eight8Chat - Your Ultimate Web Chat App",
@@ -18,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body style={{ overflow: "hidden" }}>
+      <BodyThemeWrapper>
         <Navbar />
         <div className={styles.mainContentDiv}>
           {/* This padding is to prevent the content from being hidden behind the navbar
@@ -29,7 +30,7 @@ export default function RootLayout({
           <SubNavbar />
           {children}
         </div>
-      </body>
+      </BodyThemeWrapper>
     </html>
   );
 }

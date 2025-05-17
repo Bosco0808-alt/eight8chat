@@ -38,6 +38,12 @@ export async function GET(request: NextRequest) {
     let prevMessages: any[] = [];
     const intervalId = setInterval(() => {
         async function getMessages() {
+            try {
+                // Run a simple query to check the connection
+                await prisma.$queryRaw`SELECT 1`;
+            } catch (error) {
+                await prisma.$connect();
+            }
             const messages = await prisma.messages.findMany({
                 where: {
                     OR: [
