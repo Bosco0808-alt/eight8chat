@@ -1,4 +1,5 @@
 @import "bootstrap/scss/mixins/_color-mode.scss";
+@import "../../variables.scss";
 
 $color-mode-type: data;
 
@@ -14,13 +15,13 @@ $color-mode-type: data;
 
 @include color-mode(dark) {
   .sidebar {
-    @extend .bg-dark !optional;
+    background-color: $dark_background;
   }
 }
 
 @include color-mode(light) {
   .sidebar {
-    @extend .bg-light !optional;
+    background-color: $light_background;
   }
 }
 

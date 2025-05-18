@@ -1,0 +1,16 @@
+$dark_background: #1e2124;
+$light_background: lighten(
+  $color:
+    invert(
+      $color: $dark_background,
+    ),
+  $amount: 10%,
+);
+$darkened_light_background: darken(
+  $color: $light_background,
+  $amount: 10%,
+);
+$darkened_dark_background: darken(
+  $color: $dark_background,
+  $amount: 10%,
+);

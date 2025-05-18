@@ -1,14 +1,15 @@
 @import "bootstrap/scss/mixins/_color-mode.scss";
+@import "../variables.scss";
 
 $color-mode-type: data;
 
 @include color-mode(dark) {
   .coloredThemeToggler {
-    @extend .btn-secondary !optional;
+    background-color: $darkened_dark_background;
   }
 }
 @include color-mode(light) {
   .coloredThemeToggler {
-    @extend .btn-light !optional;
+    background-color: $darkened_light_background;
   }
 }

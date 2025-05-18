@@ -1,14 +1,15 @@
 @import "bootstrap/scss/mixins/_color-mode.scss";
+@import "../variables.scss";
 
 $color-mode-type: data;
 
 @include color-mode(dark) {
   .coloredNavbar {
-    @extend .bg-dark !optional;
+    background-color: $dark_background;
   }
 }
 @include color-mode(light) {
   .coloredNavbar {
-    @extend .bg-light !optional;
+    background-color: $light_background;
   }
 }
