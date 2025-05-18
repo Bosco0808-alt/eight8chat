@@ -4,11 +4,7 @@ $color-mode-type: data;
 
 @include color-mode(dark) {
   .coloredSidebarExpander {
-    border: white;
-  }
-}
-@include color-mode(light) {
-  .coloredSidebarExpanderr {
-    border: black;
+    -webkit-filter: invert(100%); /* Safari/Chrome */
+    filter: invert(100%);
   }
 }
