@@ -48,7 +48,8 @@ export default async function FriendRequests() {
               (request) => request.receiverId === Number(session?.user?.id)
             )
             .map((request) =>
-              request.status === "REJECTED" ? null : (
+              request.status === "REJECTED" ||
+              request.status === "ACCEPTED" ? null : (
                 <ReceivedFriendRequest
                   key={request.id}
                   id={request.id}
