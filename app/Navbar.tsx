@@ -3,6 +3,7 @@ import Link from "next/link";
 import SidebarExpander from "./SidebarExpander";
 import styles from "@/app/Navbar.module.scss";
 import ColorThemeTogglerWrapper from "./ColorThemeTogglerWrapper";
+import NavbarProfileButton from "./NavbarProfileButton";
 
 const Navbar = async () => {
   const session = await auth();
@@ -28,12 +29,10 @@ const Navbar = async () => {
           </li>
         )}
         {session && (
-          <li className="nav-item active">
-            <Link className="nav-link" href="/chat/dashboard">
-              👤{" "}
-              {session?.user?.name ? session?.user?.name : session?.user?.email}
-            </Link>
-          </li>
+          <NavbarProfileButton
+            name={session?.user?.name}
+            email={session?.user?.email}
+          />
         )}
       </ul>
     </nav>
