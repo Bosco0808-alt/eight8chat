@@ -80,7 +80,7 @@ const ChatMessages = ({
             </div>
           );
         })
-      ) : isLoading ? null : (
+      ) : (
         <p>No messages found.</p>
       )}
       {isLoading && <p>Loading...</p>}
