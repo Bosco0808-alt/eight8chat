@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
+import UnfriendButton from "./UnFriendButton";
 
 const Friends = async () => {
   const session = await auth();
@@ -30,7 +31,7 @@ const Friends = async () => {
               >
                 Chat with them!
               </Link>
-              <button className="btn btn-sm btn-danger m-2">Unfriend</button>
+              <UnfriendButton userId={userId} friendId={friend.id} />
             </li>
           ))}
         </ul>

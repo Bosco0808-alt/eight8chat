@@ -62,6 +62,7 @@ const Sidebar = ({
           text: "Please enter a valid ID",
           icon: "error",
           timer: 3000,
+          theme: isDarkMode ? "dark" : "light",
         });
         break;
       case "ERR_SAME_USER":
@@ -70,6 +71,7 @@ const Sidebar = ({
           text: "You cannot add yourself as a friend",
           icon: "error",
           timer: 3000,
+          theme: isDarkMode ? "dark" : "light",
         });
         break;
       case "ERR_INVALID_USERID_OR_FRIENDID":
@@ -78,6 +80,7 @@ const Sidebar = ({
           text: "Please enter a valid ID",
           icon: "error",
           timer: 3000,
+          theme: isDarkMode ? "dark" : "light",
         });
         break;
       case "ERR_NO_USER":
@@ -86,6 +89,7 @@ const Sidebar = ({
           text: "User not found",
           icon: "error",
           timer: 3000,
+          theme: isDarkMode ? "dark" : "light",
         });
         break;
       case "ERR_NO_FRIEND":
@@ -94,6 +98,7 @@ const Sidebar = ({
           text: "Friend not found",
           icon: "error",
           timer: 3000,
+          theme: isDarkMode ? "dark" : "light",
         });
         break;
       case "ERR_ALREADY_FRIENDS":
@@ -102,6 +107,7 @@ const Sidebar = ({
           text: "You are already friends with this user",
           icon: "error",
           timer: 3000,
+          theme: isDarkMode ? "dark" : "light",
         });
         break;
       case "ERR_ALREADY_SENT_REQUEST":
@@ -110,6 +116,7 @@ const Sidebar = ({
           text: "You have already sent a friend request to this user",
           icon: "error",
           timer: 3000,
+          theme: isDarkMode ? "dark" : "light",
         });
         break;
       case "ERR_ALREADY_RECEIVED_REQUEST":
@@ -118,6 +125,7 @@ const Sidebar = ({
           text: "You have already received a friend request from this user",
           icon: "error",
           timer: 3000,
+          theme: isDarkMode ? "dark" : "light",
         });
         break;
       case "ERR":
@@ -126,6 +134,7 @@ const Sidebar = ({
           text: "There was an error, please try again later",
           icon: "error",
           timer: 3000,
+          theme: isDarkMode ? "dark" : "light",
         });
         break;
       // End of error checking
@@ -135,6 +144,7 @@ const Sidebar = ({
           text: "Friend request sent successfully",
           icon: "success",
           timer: 3000,
+          theme: isDarkMode ? "dark" : "light",
         });
         break;
       default:
@@ -143,6 +153,7 @@ const Sidebar = ({
           text: "There was an error, please try again later",
           icon: "error",
           timer: 3000,
+          theme: isDarkMode ? "dark" : "light",
         });
         break;
     }

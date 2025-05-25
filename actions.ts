@@ -184,31 +184,33 @@ export async function addFriend(requestId: string) {
             return JSON.stringify({ result: "ERR_ALREADY_FRIENDS" });
         }
         // Add friend to user
-        await prisma.users.update({
-            where: {
-                id: request.receiverId,
-            },
-            data: {
-                friends: {
-                    connect: {
-                        id: request.senderId,
+        await prisma.$transaction([
+            prisma.users.update({
+                where: {
+                    id: request.receiverId,
+                },
+                data: {
+                    friends: {
+                        connect: {
+                            id: request.senderId,
+                        },
                     },
                 },
-            },
-        });
-        // Add friend to user
-        await prisma.users.update({
-            where: {
-                id: request.senderId,
-            },
-            data: {
-                friends: {
-                    connect: {
-                        id: request.receiverId,
+            }),
+            // Add friend to user
+            prisma.users.update({
+                where: {
+                    id: request.senderId,
+                },
+                data: {
+                    friends: {
+                        connect: {
+                            id: request.receiverId,
+                        },
                     },
                 },
-            },
-        });
+            }),
+        ]);
         // Set the status of the request to accepted
         await prisma.friendRequests.update({
             where: {
@@ -451,6 +453,76 @@ export async function changeColorMode(
         return JSON.stringify({ result: "SUCCESS" });
     } catch (err) {
         console.error(err);
+        return JSON.stringify({ result: "ERR", errMessage: err });
+    }
+}
+
+export async function unFriend(
+    userid: number,
+    friendid: number
+): Promise<string> {
+    if (!userid || !friendid) {
+        return JSON.stringify({ result: "ERR_NO_USERID_OR_FRIENDID" });
+    }
+    if (userid === friendid) {
+        return JSON.stringify({ result: "ERR_SAME_USER" });
+    }
+    if (userid < 0 || friendid < 0) {
+        return JSON.stringify({ result: "ERR_INVALID_USERID_OR_FRIENDID" });
+    }
+    const session = await getUser();
+    if (Number(session?.user?.id) !== userid) {
+        return JSON.stringify({ result: "ERR_NOT_AUTHENTICATED" });
+    }
+    try {
+        const currentUser = await prisma.users.findUnique({
+            where: {
+                id: userid,
+            },
+            include: {
+                friends: true,
+                friendOf: true,
+            },
+        });
+        if (!currentUser) {
+            return JSON.stringify({ result: "ERR_NO_USER" });
+        }
+        const friend = currentUser.friends.some(
+            (friend) => friend.id === friendid
+        );
+        if (!friend) {
+            return JSON.stringify({ result: "ERR_NO_FRIEND" });
+        }
+        await prisma.$transaction([
+            // primary relation
+            prisma.users.update({
+                where: {
+                    id: userid,
+                },
+                data: {
+                    friends: {
+                        disconnect: {
+                            id: friendid,
+                        },
+                    },
+                },
+            }),
+            // opposite relation
+            prisma.users.update({
+                where: {
+                    id: friendid,
+                },
+                data: {
+                    friends: {
+                        disconnect: {
+                            id: userid,
+                        },
+                    },
+                },
+            }),
+        ]);
+        return JSON.stringify({ result: "SUCCESS" });
+    } catch (err) {
         return JSON.stringify({ result: "ERR", errMessage: err });
     }
 }

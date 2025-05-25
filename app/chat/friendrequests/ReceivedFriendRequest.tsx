@@ -1,6 +1,7 @@
 "use client";
 import { rejectFriendRequest, addFriend } from "@/actions";
 import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 const ReceivedFriendRequest = ({
   id: id,
@@ -11,6 +12,7 @@ const ReceivedFriendRequest = ({
   senderId: number;
   senderName: string;
 }) => {
+  const router = useRouter();
   const handleRejectClick = async (requestId: string) => {
     // Handle reject click
     try {
@@ -123,6 +125,7 @@ const ReceivedFriendRequest = ({
             icon: "success",
             timer: 3000,
           });
+          router.refresh();
           break;
         default:
           Swal.fire({
