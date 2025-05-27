@@ -1,13 +1,24 @@
 @import "bootstrap/scss/mixins/_color-mode.scss";
 
+$messageBackground1: #675cc6;
 $color-mode-type: data;
 @include color-mode(light) {
   .messageBackground1 {
-    background-color: #5cc68f;
+    background-color: lighten($color: $messageBackground1, $amount: 10%);
+    > {
+      .messageAuthorText {
+        color: black;
+      }
+    }
   }
 }
 @include color-mode(dark) {
   .messageBackground1 {
-    background-color: darken($color: #5cc68f, $amount: 20%);
+    background-color: darken($color: $messageBackground1, $amount: 20%);
+    > {
+      .messageAuthorText {
+        color: white;
+      }
+    }
   }
 }

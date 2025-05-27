@@ -195,6 +195,7 @@ const Sidebar = ({
               Manage and check friends
             </Link>
           </button>
+          <hr className="border border-light w-100 my-4" />
         </nav>
         <main
           className={`col-12 col-md-9 ${
