@@ -526,3 +526,37 @@ export async function unFriend(
         return JSON.stringify({ result: "ERR", errMessage: err });
     }
 }
+export async function deleteMessage(
+    messageId: string,
+    userId: number
+): Promise<string> {
+    if (!messageId || !userId) {
+        return JSON.stringify({ result: "ERR_NO_MESSAGEID_OR_USERID" });
+    }
+    const session = await getUser();
+    if (Number(session?.user?.id) !== userId) {
+        return JSON.stringify({ result: "ERR_NOT_AUTHENTICATED" });
+    }
+    try {
+        const message = await prisma.messages.findUnique({
+            where: {
+                id: messageId,
+            },
+        });
+        if (!message) {
+            return JSON.stringify({ result: "ERR_NO_MESSAGE" });
+        }
+        if (message.senderId !== userId) {
+            return JSON.stringify({ result: "ERR_NOT_AUTHORIZED" });
+        }
+        await prisma.messages.delete({
+            where: {
+                id: messageId,
+            },
+        });
+        return JSON.stringify({ result: "SUCCESS" });
+    } catch (err) {
+        console.error(err);
+        return JSON.stringify({ result: "ERR", errMessage: err });
+    }
+}

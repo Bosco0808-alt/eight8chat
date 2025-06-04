@@ -2,6 +2,9 @@
 import { useEffect, useState, useRef, Ref } from "react";
 import styles from "./ChatMessages.module.scss";
 import Swal from "sweetalert2";
+import { deleteMessage } from "@/actions";
+import { isDarkModeAtom } from "@/atoms";
+import { useAtom } from "jotai";
 
 const ChatMessages = ({
   userId,
@@ -14,8 +17,89 @@ const ChatMessages = ({
   const [messages, setMessages] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useAtom(isDarkModeAtom);
   // refs
   const scrollableRef: Ref<any> = useRef(null);
+  const handleMessageDeleteClick = async (messageId: string) => {
+    const result = await Swal.fire({
+      title: "Delete Message",
+      text: "Are you sure you want to delete this message?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it",
+      cancelButtonText: "No, keep it",
+    });
+    if (!result.isConfirmed) {
+      return;
+    }
+    const unParsedResult = await deleteMessage(messageId, userId);
+    const { result: actionResult, errMessage } = JSON.parse(unParsedResult);
+    switch (actionResult) {
+      case "ERR_NO_MESSAGEID_OR_USERID":
+        Swal.fire({
+          title: "Error",
+          text: "No message ID or user ID provided.",
+          icon: "error",
+          confirmButtonText: "OK",
+          theme: isDarkMode ? "dark" : "light",
+        });
+        break;
+      case "ERR_NOT_AUTHENTICATED":
+        Swal.fire({
+          title: "Error",
+          text: "You are not authenticated.",
+          icon: "error",
+          confirmButtonText: "OK",
+          theme: isDarkMode ? "dark" : "light",
+        });
+        break;
+      case "ERR_NO_MESSAGE":
+        Swal.fire({
+          title: "Error",
+          text: "No message found with the provided ID.",
+          icon: "error",
+          confirmButtonText: "OK",
+          theme: isDarkMode ? "dark" : "light",
+        });
+        break;
+      case "ERR_NOT_AUTHORIZED":
+        Swal.fire({
+          title: "Error",
+          text: "You are not authorized to delete this message.",
+          icon: "error",
+          confirmButtonText: "OK",
+          theme: isDarkMode ? "dark" : "light",
+        });
+        break;
+      case "SUCCESS":
+        Swal.fire({
+          title: "Success",
+          text: "Message deleted successfully.",
+          icon: "success",
+          confirmButtonText: "OK",
+          theme: isDarkMode ? "dark" : "light",
+        });
+        break;
+      case "ERR":
+        Swal.fire({
+          title: "Error",
+          text: `An error occurred: ${errMessage}`,
+          icon: "error",
+          confirmButtonText: "OK",
+          theme: isDarkMode ? "dark" : "light",
+        });
+        break;
+      default:
+        Swal.fire({
+          title: "Error",
+          text: "An unexpected error occurred.",
+          icon: "error",
+          confirmButtonText: "OK",
+          theme: isDarkMode ? "dark" : "light",
+        });
+        break;
+    }
+  };
   // effects
   useEffect(() => {
     if (scrollableRef.current) {
@@ -73,17 +157,7 @@ const ChatMessages = ({
               {message.sender.id === userId && (
                 <button
                   className="btn btn-danger btn-sm mx-2"
-                  onClick={() =>
-                    Swal.fire({
-                      title: "Delete Message",
-                      text: "Are you sure you want to delete this message?",
-                      icon: "warning",
-                      showCancelButton: true,
-                      confirmButtonText:
-                        "No, I won't delete it because this button doesn't work yet",
-                      cancelButtonText: "No, keep it",
-                    })
-                  }
+                  onClick={() => handleMessageDeleteClick(message.id)}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

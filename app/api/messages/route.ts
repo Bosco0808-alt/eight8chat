@@ -36,6 +36,7 @@ export async function GET(request: NextRequest) {
 
     const writer = stream.writable.getWriter();
     let prevMessages: any[] = [];
+    await writer.write([]);
     const intervalId = setInterval(() => {
         async function getMessages() {
             try {

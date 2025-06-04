@@ -45,6 +45,7 @@ model users {
   receivedRequests  FriendRequests[] @relation("ReceivedRequests")
   sentMessages      Messages[]       @relation("SentMessages")
   receivedMessages  Messages[]       @relation("ReceivedMessages")
+  RoomOwned         Rooms[]
 }
 
 model verification_token {
@@ -75,4 +76,10 @@ model Messages {
   createdAt  DateTime @default(now())
   sender     users    @relation("SentMessages", fields: [senderId], references: [id])
   receiver   users    @relation("ReceivedMessages", fields: [receiverId], references: [id])
+}
+
+model Rooms {
+  id          String @id @default(uuid())
+  roomOwner   users  @relation(fields: [roomOwnerId], references: [id])
+  roomOwnerId Int
 }
